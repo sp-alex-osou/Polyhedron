@@ -7,12 +7,8 @@ document.body.appendChild(renderer.domElement);
 
 Math.PHI = (1.0 + Math.sqrt(5)) / 2.0;
 
-// var parent = new Dodecahedron();
-// scene.add(parent);
-
-
-
-
+var parent = new Dodecahedron();
+scene.add(parent);
 
 var light = new THREE.DirectionalLight(0xffffff);
 light.position.set(0,1,1);
