@@ -1,4 +1,4 @@
-function Edge(from, to, face) {
-	this.vertices = [ from, to ];
-	this.faces = [ face ];
+function Edge(from, to) {
+	this.from = from;
+	this.to = to;
 }

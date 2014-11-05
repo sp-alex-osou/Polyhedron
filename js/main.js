@@ -11,22 +11,26 @@ document.body.appendChild(renderer.domElement);
 var material = new THREE.MeshLambertMaterial({ 
 	// wireframe: true,
 	// side: THREE.DoubleSide,
+	shading: THREE.FlatShading
 });
+
+var mesh = new Mesh();
+
+mesh.subdivide();
 
 var geometry = new THREE.Geometry();
 
-for (var i = 0; i < vertices.length; ++i) {
-	geometry.vertices.push(new THREE.Vector3(vertices[i][0], vertices[i][1], vertices[i][2]));
+for (var i = 0; i < mesh.vertices.length; ++i) {
+	geometry.vertices.push(mesh.vertices[i]);
 }
 
-for (var i = 0; i < faces.length; ++i) {
-	var f = faces[i];
-	geometry.faces.push(new THREE.Face3(f[0], f[1], f[2]));
-	geometry.faces.push(new THREE.Face3(f[0], f[2], f[3]));
-	geometry.faces.push(new THREE.Face3(f[0], f[3], f[4]));
-}
+for (var i = 0; i < mesh.faces.length; ++i) {
+	var f = mesh.faces[i];
 
-geometry.computeVertexNormals();
+	for (var j = 0; j < f.corners.length - 2; ++j) {
+		geometry.faces.push(new THREE.Face3(f.corners[0], f.corners[1+j], f.corners[2+j], f.normal));
+	}
+}
 
 var parent = new THREE.Mesh(geometry, material);
 scene.add(parent);
