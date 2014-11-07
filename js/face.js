@@ -1,9 +1,6 @@
-function Face(corners, normal) {
+function Face(corners, center, normal, level) {
 	this.corners = corners;
+	this.center = center;
 	this.normal = normal;
-	this.edges = [];
-
-	for (var i = 0; i < corners.length; ++i) {
-		this.edges.push(new Edge(corners[i], corners[(i+1) % corners.length]));
-	}
+	this.level = level;
 }

@@ -5,56 +5,70 @@ var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// var parent = new Dodecahedron();
-// scene.add(parent);
-
 var material = new THREE.MeshLambertMaterial({ 
 	// wireframe: true,
 	// side: THREE.DoubleSide,
-	shading: THREE.FlatShading
+	shading: THREE.FlatShading,
+	vertexColors: THREE.FaceColors
 });
 
-var mesh = new Mesh();
+var mesh = new Mesh(Dodecahedron.vertices, Dodecahedron.faces);
 
-mesh.subdivide();
+var parent = new THREE.Object3D();
+var child;
 
-var geometry = new THREE.Geometry();
-
-for (var i = 0; i < mesh.vertices.length; ++i) {
-	geometry.vertices.push(mesh.vertices[i]);
-}
-
-for (var i = 0; i < mesh.faces.length; ++i) {
-	var f = mesh.faces[i];
-
-	for (var j = 0; j < f.corners.length - 2; ++j) {
-		geometry.faces.push(new THREE.Face3(f.corners[0], f.corners[1+j], f.corners[2+j], f.normal));
-	}
-}
-
-var parent = new THREE.Mesh(geometry, material);
 scene.add(parent);
 
-var light = new THREE.DirectionalLight(0xffffff);
+function updateMesh() {
+	parent.remove(child);
+
+	var geometry = new THREE.Geometry();
+
+	for (var i = 0; i < mesh.vertices.length; ++i) {
+		geometry.vertices.push(mesh.vertices[i]);
+	}
+
+	for (var i = 0; i < mesh.faces.length; ++i) {
+		var f = mesh.faces[i];
+
+		for (var j = 0; j < f.corners.length - 2; ++j) {
+			geometry.faces.push(new THREE.Face3(f.corners[0], f.corners[1+j], f.corners[2+j], f.normal, mesh.getColor(f)));
+		}
+	}
+
+	child = new THREE.Mesh(geometry, material);
+	parent.add(child);
+}
+
+updateMesh();
+
+var light = new THREE.DirectionalLight(0x777777);
 light.position.set(0,1,1);
 
-var ambient = new THREE.AmbientLight(0x222222);
+var ambient = new THREE.AmbientLight(0x333333);
 // var ambient = new THREE.AmbientLight(0xffffff);
 
 scene.add(light);
 scene.add(ambient);
 
-camera.position.z = 5;
+camera.position.z = 4;
 
 var render = function () {
-	requestAnimationFrame(render);
 	renderer.render(scene, camera);
+	requestAnimationFrame(render);
 };
 
 render();
 
 var drag = false;
 var x, y;
+
+document.onkeydown = function(e) {
+	switch (e.which) {
+		case 187: mesh.subdivide(); updateMesh(); break;
+		case 189: mesh.merge(); updateMesh(); break;
+	}
+}
 
 document.onmousedown = function(e) { 
 	drag = true;
