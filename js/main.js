@@ -7,7 +7,7 @@ document.body.appendChild(renderer.domElement);
 
 var material = new THREE.MeshLambertMaterial({ 
 	// wireframe: true,
-	// side: THREE.DoubleSide,
+	side: THREE.DoubleSide,
 	shading: THREE.FlatShading,
 	vertexColors: THREE.FaceColors
 });

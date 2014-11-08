@@ -8,6 +8,7 @@ function Mesh(vertices, faces) {
 Mesh.prototype.init = function(subdivisions) {
 	this.vertices = [];
 	this.faces = [];
+
 	this.subdivisions = 0;
 
 	var v = this.defaultVertices;
@@ -60,13 +61,33 @@ Mesh.prototype.mergeFaces = function(faces) {
 
 Mesh.prototype.subdivideFace = function(face, newFaces) {
 	var newCorners = face.corners;
-	var oldCorners = face.corners.slice(0);
+	var oldCorners = face.corners.clone();
 
-	for (var i = 0; i < newCorners.length; ++i) {
-		// TODO
-		var oldCorner = this.vertices[oldCorners[i]].clone();
-		var v = oldCorner.clone().add(face.center).normalize().multiplyScalar(oldCorner.length());
-		newCorners[i] = this.addVertex(v);
+	for (var i = 0; i < oldCorners.length; ++i) {
+		var corner = this.vertices[oldCorners[i]].clone();
+
+		var prev = this.vertices[oldCorners[(i-1).mod(oldCorners.length)]];
+		var next = this.vertices[oldCorners[(i+1).mod(oldCorners.length)]];
+
+		var normalPrev = new THREE.Vector3().addVectors(corner, prev).multiplyScalar(0.5).normalize();
+		var normalNext = new THREE.Vector3().addVectors(corner, next).multiplyScalar(0.5).normalize();
+
+		var a = new THREE.Vector3().subVectors(corner, prev).multiplyScalar(0.5);
+		var bn = new THREE.Vector3().crossVectors(a, normalPrev).normalize();
+		var cn = new THREE.Vector3().crossVectors(normalPrev, normalNext).normalize();
+
+		var bc = Math.acos(bn.dot(cn));
+		var sinBC = Math.sin(bc);
+
+		var c = cn.clone().multiplyScalar(a.length() / sinBC);
+
+		var x = sinBC * 2 * c.length() / (1 + sinBC * 2);
+
+		console.log(x);
+
+		corner.add(cn.multiplyScalar(x));
+
+		newCorners[i] = this.addVertex(corner);
 	}
 
 	for (var i = 0; i < oldCorners.length; ++i) {
@@ -100,10 +121,7 @@ Mesh.prototype.getCenter = function(corners) {
 }
 
 Mesh.prototype.getNormal = function(corners) {
-	var a = new THREE.Vector3().subVectors(this.vertices[corners[1]], this.vertices[corners[0]]);
-	var b = new THREE.Vector3().subVectors(this.vertices[corners[2]], this.vertices[corners[0]]);
-
-	return new THREE.Vector3().crossVectors(a, b).normalize();
+	return this.getCenter(corners).normalize();
 }
 
 Mesh.prototype.getColor = function(face) {
