@@ -7,7 +7,7 @@ document.body.appendChild(renderer.domElement);
 
 var material = new THREE.MeshLambertMaterial({ 
 	// wireframe: true,
-	side: THREE.DoubleSide,
+	// side: THREE.DoubleSide,
 	shading: THREE.FlatShading,
 	vertexColors: THREE.FaceColors
 });
@@ -45,7 +45,7 @@ updateMesh();
 var light = new THREE.DirectionalLight(0x777777);
 light.position.set(0,1,1);
 
-var ambient = new THREE.AmbientLight(0x333333);
+var ambient = new THREE.AmbientLight(0x444444);
 // var ambient = new THREE.AmbientLight(0xffffff);
 
 scene.add(light);
@@ -66,7 +66,7 @@ var x, y;
 document.onkeydown = function(e) {
 	switch (e.which) {
 		case 187: mesh.subdivide(); updateMesh(); break;
-		case 189: mesh.merge(); updateMesh(); break;
+		case 189: mesh.merge(); updateMesh(); 	break;
 	}
 }
 

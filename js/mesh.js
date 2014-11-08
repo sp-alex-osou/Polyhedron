@@ -22,6 +22,8 @@ Mesh.prototype.init = function(subdivisions) {
 		this.faces.push(new Face(f[i].clone(), this.getCenter(f[i]), this.getNormal(f[i]), 0));
 	}
 
+	this.radius = this.vertices[0].length();
+
 	for (var i = 0; i < subdivisions; ++i) {
 		this.subdivide();
 	}
@@ -65,28 +67,8 @@ Mesh.prototype.subdivideFace = function(face, newFaces) {
 
 	for (var i = 0; i < oldCorners.length; ++i) {
 		var corner = this.vertices[oldCorners[i]].clone();
-
-		var prev = this.vertices[oldCorners[(i-1).mod(oldCorners.length)]];
-		var next = this.vertices[oldCorners[(i+1).mod(oldCorners.length)]];
-
-		var normalPrev = new THREE.Vector3().addVectors(corner, prev).multiplyScalar(0.5).normalize();
-		var normalNext = new THREE.Vector3().addVectors(corner, next).multiplyScalar(0.5).normalize();
-
-		var a = new THREE.Vector3().subVectors(corner, prev).multiplyScalar(0.5);
-		var bn = new THREE.Vector3().crossVectors(a, normalPrev).normalize();
-		var cn = new THREE.Vector3().crossVectors(normalPrev, normalNext).normalize();
-
-		var bc = Math.acos(bn.dot(cn));
-		var sinBC = Math.sin(bc);
-
-		var c = cn.clone().multiplyScalar(a.length() / sinBC);
-
-		var x = sinBC * 2 * c.length() / (1 + sinBC * 2);
-
-		console.log(x);
-
-		corner.add(cn.multiplyScalar(x));
-
+		var center = face.center.clone().normalize().multiplyScalar(this.radius);
+		corner.add(center).multiplyScalar(0.5).normalize().multiplyScalar(this.radius);
 		newCorners[i] = this.addVertex(corner);
 	}
 
