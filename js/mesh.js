@@ -35,6 +35,7 @@ Mesh.prototype.merge = function() {
 
 Mesh.prototype.subdivide = function() {
 	++this.subdivisions;
+	this.edge *= 0.5;
 
 	var newFaces = {};
 
@@ -62,21 +63,37 @@ Mesh.prototype.mergeFaces = function(faces) {
 }
 
 Mesh.prototype.subdivideFace = function(face, newFaces) {
-	var newCorners = face.corners;
 	var oldCorners = face.corners.clone();
 
 	for (var i = 0; i < oldCorners.length; ++i) {
-		var corner = this.vertices[oldCorners[i]].clone();
-		var center = face.center.clone().normalize().multiplyScalar(this.radius);
-		corner.add(center).multiplyScalar(0.5).normalize().multiplyScalar(this.radius);
-		newCorners[i] = this.addVertex(corner);
+		var oldCorner = this.vertices[oldCorners[i]];
+		var newCorner;
+
+		var next = this.vertices[oldCorners[(i+1).mod(oldCorners.length)]];
+		var prev = this.vertices[oldCorners[(i-1).mod(oldCorners.length)]];
+
+		var nextEdge = new THREE.Vector3().subVectors(oldCorner, next).length();
+		var prevEdge = new THREE.Vector3().subVectors(oldCorner, prev).length();
+
+		var edgeLength = (nextEdge + prevEdge) * 0.25;
+
+		var edge = new THREE.Vector3().subVectors(face.center, oldCorner);
+
+		for (var j = 0; j < 10; ++j) {
+			newCorner = oldCorner.clone().add(edge.normalize().multiplyScalar(edgeLength)).normalize().multiplyScalar(this.radius);
+			edge = new THREE.Vector3().subVectors(newCorner, oldCorner);
+		}
+
+		face.corners[i] = this.addVertex(newCorner);
 	}
+
+	face.center = this.getCenter(face.corners);
 
 	for (var i = 0; i < oldCorners.length; ++i) {
 		var a = i;
 		var b = (i+1) % oldCorners.length;
 
-		var newFace = new Face([ oldCorners[a], oldCorners[b], newCorners[b], newCorners[a] ]);
+		var newFace = new Face([ oldCorners[a], oldCorners[b], face.corners[b], face.corners[a] ]);
 
 		var min = Math.min(oldCorners[a], oldCorners[b]);
 		var max = Math.max(oldCorners[a], oldCorners[b]);
