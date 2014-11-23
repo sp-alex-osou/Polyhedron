@@ -19,6 +19,8 @@ var child;
 
 scene.add(parent);
 
+// neues kommentar
+
 function updateMesh() {
 	parent.remove(child);
 
