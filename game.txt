@@ -1,0 +1,25 @@
+- Strategie
+
+- 2+ Spieler (AI/Multiplayer)
+
+- Spieler starten auf Pentagon?
+
+- Alle Hexagone können eingenommen werden?
+
+- Wie wird ein Hexagon eingenommen?
+
+- Pentagon wird übernommen, wenn
+	- Spieler alle fünf benachbarten Hexagone besitzt?
+	- Spieler die meisten benachbarten Hexagone besitzt?
+	- direke Verbindung zur Basis besteht?
+
+- Was bringt ein Pentagon
+	- Ressourcen?
+	- Einheiten?
+
+- Ziel des Spiels
+	- Gegnerisches Start-Pentagon einnehmen?
+	- Alle Pentagone einnehmen?
+	- Mehrheit der Pentagone einnehmen?
+
+- Alle Felder sichtbar? Fog of War?
