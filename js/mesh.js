@@ -27,16 +27,14 @@ Mesh.prototype.init = function(subdivisions) {
 	for (var i = 0; i < subdivisions; ++i) {
 		this.subdivide();
 	}
-}
+};
 
 Mesh.prototype.merge = function() {
 	this.init(Math.max(this.subdivisions - 1, 0));
-}
+};
 
 Mesh.prototype.subdivide = function() {
 	++this.subdivisions;
-	this.edge *= 0.5;
-
 	var newFaces = {};
 
 	for (var i = 0; i < this.faces.length; ++i) {
@@ -48,7 +46,7 @@ Mesh.prototype.subdivide = function() {
 			this.faces.push(this.mergeFaces(newFaces[min][max]));
 		}
 	}
-}
+};
 
 Mesh.prototype.mergeFaces = function(faces) {
 	var corners = [];
@@ -60,7 +58,7 @@ Mesh.prototype.mergeFaces = function(faces) {
 	}
 
 	return new Face(corners, this.getCenter(corners), this.getNormal(corners), this.subdivisions);
-}
+};
 
 Mesh.prototype.subdivideFace = function(face, newFaces) {
 	var oldCorners = face.corners.clone();
@@ -92,12 +90,12 @@ Mesh.prototype.subdivideFace = function(face, newFaces) {
 		newFaces[min][max] = newFaces[min][max] || [];
 		newFaces[min][max].push(newFace);
 	}
-}
+};
 
 Mesh.prototype.addVertex = function(vertex) {
 	this.vertices.push(vertex);
 	return this.vertices.length - 1;
-}
+};
 
 Mesh.prototype.getCenter = function(corners) {
 	var center = new THREE.Vector3();
@@ -107,11 +105,11 @@ Mesh.prototype.getCenter = function(corners) {
 	}
 
 	return center.divideScalar(corners.length);
-}
+};
 
 Mesh.prototype.getNormal = function(corners) {
 	return this.getCenter(corners).normalize();
-}
+};
 
 Mesh.prototype.getColor = function(face) {
 	var color = THREE.ColorKeywords.green;
@@ -123,4 +121,4 @@ Mesh.prototype.getColor = function(face) {
 	}
 
 	return new THREE.Color(color);
-}
+};

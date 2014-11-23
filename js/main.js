@@ -68,17 +68,17 @@ document.onkeydown = function(e) {
 		case 187: mesh.subdivide(); updateMesh(); break;
 		case 189: mesh.merge(); updateMesh(); 	break;
 	}
-}
+};
 
 document.onmousedown = function(e) { 
 	drag = true;
 	x = e.x;
 	y = e.y;
-}
+};
 
 document.onmouseup = function(e) { 
 	drag = false; 
-}
+};
 
 document.onmousemove = function(e) {
 	if (!drag) { return; }
@@ -96,5 +96,5 @@ document.onmousemove = function(e) {
 
 	q.setFromAxisAngle(new THREE.Vector3(1, 0, 0), deltaY * 0.005);
 	parent.quaternion.multiplyQuaternions(q, parent.quaternion);
-}
+};
 

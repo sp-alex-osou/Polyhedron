@@ -33,7 +33,7 @@ var Dodecahedron = {
 		[ -Math.PHI, 0, -1 / Math.PHI ], // 16
 		[ +Math.PHI, 0, -1 / Math.PHI ], // 17
 		[ -Math.PHI, 0, +1 / Math.PHI ], // 18
-		[ +Math.PHI, 0, +1 / Math.PHI ], // 19
+		[ +Math.PHI, 0, +1 / Math.PHI ] // 19
 	],
 
 	faces: [
@@ -54,4 +54,4 @@ var Dodecahedron = {
 		[ 12,  1, 18, 16,  0 ]
 
 	]
-}
+};
