@@ -125,7 +125,7 @@ Mesh.prototype.getColor = function(face) {
 	return new THREE.Color(color);
 };
 
-Mesh.prototype.selectFace = function(corners)
+Mesh.prototype.selectFaces = function(corners)
 {
 	for (var i = 0; i < this.faces.length; ++i) {
 		var containsAllCorners = true;

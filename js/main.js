@@ -88,11 +88,11 @@ document.onmouseup = function(e) {
 		mouseVector.y = 1 - 2 * (e.y / window.innerHeight);
 
 		var raycaster = projector.pickingRay(mouseVector.clone(), camera);
-		var intersects = raycaster.intersectObjects(parent.children);
+		var intersectedObjects = raycaster.intersectObjects(parent.children);
 
-		if (intersects.length > 0) {
-			var nearestHiddenFace = intersects[0].face;
-			mesh.selectFace([nearestHiddenFace.a, nearestHiddenFace.b, nearestHiddenFace.c]);
+		if (intersectedObjects.length > 0) {
+			var nearestHiddenFace = intersectedObjects[0].face;
+			mesh.selectFaces([nearestHiddenFace.a, nearestHiddenFace.b, nearestHiddenFace.c]);
 
 			updateMesh();
 		}
