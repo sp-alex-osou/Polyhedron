@@ -1,5 +1,3 @@
-//test comment
-
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -62,7 +60,9 @@ var render = function () {
 
 render();
 
+var dragTreshhold = 0.01;
 var drag = false;
+var mouseDown = false;
 var x, y;
 
 document.onkeydown = function(e) {
@@ -72,21 +72,45 @@ document.onkeydown = function(e) {
 	}
 };
 
-document.onmousedown = function(e) { 
-	drag = true;
+document.onmousedown = function(e) {
+	mouseDown = true;
+
 	x = e.x;
 	y = e.y;
 };
 
-document.onmouseup = function(e) { 
-	drag = false; 
+var projector = new THREE.Projector();
+var mouseVector = new THREE.Vector3();
+
+document.onmouseup = function(e) {
+	if (!drag) {
+		mouseVector.x = 2 * (e.x / window.innerWidth) - 1;
+		mouseVector.y = 1 - 2 * (e.y / window.innerHeight);
+
+		var raycaster = projector.pickingRay(mouseVector.clone(), camera);
+		var intersects = raycaster.intersectObjects(parent.children);
+
+		if (intersects.length > 0) {
+			var nearestHiddenFace = intersects[0].face;
+			mesh.selectFace([nearestHiddenFace.a, nearestHiddenFace.b, nearestHiddenFace.c]);
+
+			updateMesh();
+		}
+	}
+
+	mouseDown = false;
+	drag = false;
 };
 
 document.onmousemove = function(e) {
-	if (!drag) { return; }
+	if (!mouseDown) { return }
 
 	var deltaX = e.x - x;
 	var deltaY = e.y - y;
+
+	if (!drag && (Math.abs(deltaX) + Math.abs(deltaY) <= dragTreshhold)) { return; }
+
+	drag = true;
 
 	x = e.x;
 	y = e.y;

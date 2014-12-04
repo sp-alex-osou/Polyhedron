@@ -3,4 +3,5 @@ function Face(corners, center, normal, level) {
 	this.center = center;
 	this.normal = normal;
 	this.level = level;
+	this.selected = false;
 }
