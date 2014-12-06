@@ -127,12 +127,8 @@ Mesh.prototype.getColor = function(face) {
 
 Mesh.prototype.selectFaces = function(corners) {
 	for (var i = 0; i < this.faces.length; ++i) {
-		var containsAllCorners = true;
-		for (var j = 0; j < corners.length; ++j) {
-			if ($.inArray(corners[j], this.faces[i].corners) == -1)
-				containsAllCorners = false;
-		}
-		if (containsAllCorners)
+		if (this.faces[i].containsAllCorners(corners)) {
 			this.faces[i].selected = !this.faces[i].selected;
+		}
 	}
 };

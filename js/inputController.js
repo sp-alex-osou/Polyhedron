@@ -1,7 +1,7 @@
 var dragTreshold = 0.01;
 var drag = false;
 var mouseDown = false;
-var mouseX, mouseY;
+var lastMouseX, lastMouseY;
 
 document.onkeydown = function(e) {
     switch (e.which) {
@@ -13,11 +13,12 @@ document.onkeydown = function(e) {
 document.onmousedown = function(e) {
     mouseDown = true;
 
-    mouseX = e.x;
-    mouseY = e.y;
+    lastMouseX = e.x;
+    lastMouseY = e.y;
 };
 
 function getMouseVector(e) {
+    // scale mouse position to [-1, 1]
     var x = 2 * (e.x / window.innerWidth) - 1;
     var y = 1 - 2 * (e.y / window.innerHeight);
 
@@ -38,6 +39,7 @@ document.onmouseup = function(e) {
         var intersectedObjects = pickIntersectedObjects(getMouseVector(e));
         if (intersectedObjects.length > 0) {
             var faceCorners = getCornersOfFace3(intersectedObjects[0].face);
+            console.log(faceCorners);
             mesh.selectFaces(faceCorners);
             updateMesh();
         }
@@ -61,18 +63,19 @@ function isDragTresholdReached(deltaX, deltaY) {
     return (Math.abs(deltaX) + Math.abs(deltaY) > dragTreshold);
 }
 
+var rotationSpeed = 0.005;
 document.onmousemove = function(e) {
     if (!mouseDown) { return }
 
-    var deltaX = e.x - mouseX;
-    var deltaY = e.y - mouseY;
+    var deltaX = e.x - lastMouseX;
+    var deltaY = e.y - lastMouseY;
 
     if (!drag && !isDragTresholdReached(deltaX, deltaY)) { return; }
 
     drag = true;
 
-    mouseX = e.x;
-    mouseY = e.y;
+    lastMouseX = e.x;
+    lastMouseY = e.y;
 
-    rotateScene(deltaY * 0.005, deltaX * 0.005);
+    rotateScene(deltaY * rotationSpeed, deltaX * rotationSpeed);
 };
