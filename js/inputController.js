@@ -1,12 +1,11 @@
-var dragTreshold = 0.01;
 var drag = false;
 var mouseDown = false;
 var lastMouseX, lastMouseY;
 
 document.onkeydown = function(e) {
     switch (e.which) {
-        case 187: mesh.subdivide(); updateMesh(); break;
-        case 189: mesh.merge(); updateMesh(); 	break;
+        case KEYS.PLUS: mesh.subdivide(); updateMesh(); break;
+        case KEYS.MINUS: mesh.merge(); updateMesh(); 	break;
     }
 };
 
@@ -59,23 +58,24 @@ function rotateScene(xAxisRotation, yAxisRotation) {
     parent.quaternion.multiplyQuaternions(q, parent.quaternion);
 }
 
-function isDragTresholdReached(deltaX, deltaY) {
-    return (Math.abs(deltaX) + Math.abs(deltaY) > dragTreshold);
+var DRAG_THRESHOLD = 0.01;
+function isDragThresholdReached(deltaX, deltaY) {
+    return (Math.abs(deltaX) + Math.abs(deltaY) > DRAG_THRESHOLD);
 }
 
-var rotationSpeed = 0.005;
+var ROTATION_SPEED = 0.005;
 document.onmousemove = function(e) {
     if (!mouseDown) { return }
 
     var deltaX = e.x - lastMouseX;
     var deltaY = e.y - lastMouseY;
 
-    if (!drag && !isDragTresholdReached(deltaX, deltaY)) { return; }
+    if (!drag && !isDragThresholdReached(deltaX, deltaY)) { return; }
 
     drag = true;
 
     lastMouseX = e.x;
     lastMouseY = e.y;
 
-    rotateScene(deltaY * rotationSpeed, deltaX * rotationSpeed);
+    rotateScene(deltaY * ROTATION_SPEED, deltaX * ROTATION_SPEED);
 };

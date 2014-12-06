@@ -8,7 +8,7 @@ function Face(corners, center, normal, level) {
 
 Face.prototype.containsAllCorners = function(corners) {
 	for (var j = 0; j < corners.length; ++j) {
-		if ($.inArray(corners[j], this.corners) == -1)
+		if (this.corners.indexOf(corners[j]) == -1)
 			return false;
 	}
 
