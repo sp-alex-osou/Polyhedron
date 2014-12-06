@@ -114,11 +114,21 @@ Mesh.prototype.getNormal = function(corners) {
 Mesh.prototype.getColor = function(face) {
 	var color = THREE.ColorKeywords.green;
 
-	if (face.level == 0) {
+	if (face.selected) {
+		color = THREE.ColorKeywords.blue;
+	} else if (face.level == 0) {
 		color = THREE.ColorKeywords.red;
 	} else if (face.level == this.subdivisions) {
 		color = THREE.ColorKeywords.yellow;
 	}
 
 	return new THREE.Color(color);
+};
+
+Mesh.prototype.selectFaces = function(corners) {
+	for (var i = 0; i < this.faces.length; ++i) {
+		if (this.faces[i].containsAllCorners(corners)) {
+			this.faces[i].selected = !this.faces[i].selected;
+		}
+	}
 };
